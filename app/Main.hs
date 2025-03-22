@@ -1,10 +1,13 @@
 module Main (main) where
 
 import Data.AbsoluteSolver (solvedFor)
+import System.Environment (getArgs)
 
 main :: IO ()
 main = do
-    -- symbolically solve the equation for 'ligma'
-    putStrLn $ case "4 + 3 * ligma = 3" `solvedFor` "ligma" of
-        Left x -> x
-        Right x -> show x
+    args <- getArgs
+    case head args `solvedFor` last args of
+        Left err -> print err
+        Right (soln, steps) -> do
+            print soln
+            mapM_ print steps

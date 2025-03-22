@@ -28,27 +28,8 @@ parseEquation eqn
         preprocess :: String -> [String]
         preprocess = map (unpack . strip) . split (== '=') . pack 
 
---------------------------------------------------------
---                      hierarchy                     --
---------------------------------------------------------
 expression :: AbSolve
 expression = sum
-
-p3Term :: AbSolve
-p3Term = try quotient <|> p2Term
-
-p2Term :: AbSolve
-p2Term = try exponent <|> p1Term
-
-p1Term :: AbSolve
-p1Term = try logarithm <|> p0Term
-
-p0Term :: AbSolve
-p0Term = try parenthetical <|> try symb <|> value
-
---------------------------------------------------------
---                     definitions                    --
---------------------------------------------------------
 
 polyTerm :: Char -> ([AlgebraicStruct] -> AlgebraicStruct) -> AbSolve -> String -> AbSolve
 polyTerm c cnstrctr p name = do
@@ -89,6 +70,7 @@ exponent = do
 
 logarithm :: AbSolve
 logarithm = do
+    whiteSpace haskell
     _ <- string "log"
     logBase <- p0Term
     logLog <- parens haskell p0Term <?> "logarithm"
@@ -111,3 +93,15 @@ symb :: AbSolve
 symb = do
     sym <- whiteSpace haskell >> identifier haskell <?> "symbol"
     return $ Symbol sym
+
+p3Term :: AbSolve
+p3Term = try quotient <|> p2Term
+
+p2Term :: AbSolve
+p2Term = try exponent <|> p1Term
+
+p1Term :: AbSolve
+p1Term = try logarithm <|> p0Term
+
+p0Term :: AbSolve
+p0Term = try parenthetical <|> try symb <|> value
