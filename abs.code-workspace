@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "name": "Haskell Src",
+            "path": "haskell"
+        },
+        {
+            "name": "Rust Src",
+            "path": "rust"
+        },
+        {
+            "name": "Deno Src",
+            "path": "deno"
+        }
+    ]
+}
