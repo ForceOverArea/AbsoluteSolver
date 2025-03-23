@@ -47,6 +47,7 @@ library
     import:             warnings 
 
     exposed-modules:    Data.AbsoluteSolver.Parser,
+                        Data.AbsoluteSolver.Evaluate,
                         Data.AbsoluteSolver.Isolate,
                         Data.AbsoluteSolver.Structures,
                         Data.AbsoluteSolver

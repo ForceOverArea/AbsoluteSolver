@@ -67,8 +67,7 @@ isolateMain = do
         Logarithm b l -> isolateLog b l
         Group g -> setLhs g
         Value _ -> lift $ throwError IsolationErrorOccurred
-        Symbol s -> 
-            if s == sym then 
+        Symbol s -> if s == sym then 
                 return () -- terminate recursive loop
             else
                 lift $ throwError IsolationErrorOccurred
