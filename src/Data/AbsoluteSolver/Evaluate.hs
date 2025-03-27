@@ -1,13 +1,15 @@
+{-# LANGUAGE Safe #-}
 module Data.AbsoluteSolver.Evaluate
     ( evaluate
     , Context
+    , CtxItem(..)
     ) where
 
-import Control.Monad.Except (runExcept, throwError, Except)
-import Control.Monad.Reader (asks, runReaderT, ReaderT)
-import Control.Monad.Trans (lift)
-import Data.AbsoluteSolver.Structures (AlgebraicStruct(..))
-import qualified Data.Map as M (lookup, Map)
+import safe Control.Monad.Except (runExcept, throwError, Except)
+import safe Control.Monad.Reader (asks, runReaderT, ReaderT)
+import safe Control.Monad.Trans (lift)
+import safe Data.AbsoluteSolver.Structures (AlgebraicStruct(..))
+import safe qualified Data.Map as M (lookup, Map)
 
 type Context = M.Map String CtxItem
 

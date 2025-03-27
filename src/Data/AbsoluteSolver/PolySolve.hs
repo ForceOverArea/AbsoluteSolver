@@ -1,4 +1,5 @@
-module PolySolve 
+{-# LANGUAGE Safe #-}
+module Data.AbsoluteSolver.PolySolve 
     ( 
     ) where
 

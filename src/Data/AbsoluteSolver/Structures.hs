@@ -1,3 +1,4 @@
+{-# LANGUAGE Safe #-}
 module Data.AbsoluteSolver.Structures 
     ( emap
     , AlgebraicStruct(..)
@@ -5,8 +6,8 @@ module Data.AbsoluteSolver.Structures
     , Symbol
     ) where
 
-import Prelude hiding (exp)
-import Data.List (intercalate)
+import safe Prelude hiding (exp)
+import safe Data.List (intercalate)
 
 -- | A type alias for a symbol that may be nested inside an algebraic structure
 type Symbol = String
@@ -50,7 +51,7 @@ data AlgebraicStruct
         }
 
     | Function 
-        { name :: String
+        { fname :: String
         , argv :: [AlgebraicStruct]
         }
 

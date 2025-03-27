@@ -1,15 +1,16 @@
+{-# LANGUAGE Safe #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 
 module Glue where
 
-import Control.Arrow ((&&&), (|||), second, right)
-import Data.AbsoluteSolver (solvedFor, solvedForValue')
-import Data.AbsoluteSolver.Evaluate (Context)
-import Data.AbsoluteSolver.Structures (Equation)
-import Data.List (findIndex)
-import Foreign.C.String (CString, peekCString)
-import Foreign.C.Types (CDouble(..))
-import Foreign.C (newCString)
+import safe Control.Arrow ((&&&), (|||), second, right)
+import safe Data.AbsoluteSolver (solvedFor, solvedForValue')
+import safe Data.AbsoluteSolver.Evaluate (Context)
+import safe Data.AbsoluteSolver.Structures (Equation)
+import safe Data.List (findIndex)
+import safe Foreign.C.String (peekCString, CString)
+import safe Foreign.C.Types (CDouble(..))
+import safe Foreign.C (newCString)
 
 solvedForHs :: CString -> CString -> IO CString
 solvedForHs eqn target = do

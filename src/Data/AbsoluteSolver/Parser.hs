@@ -1,15 +1,16 @@
+{-# LANGUAGE Safe #-}
 module Data.AbsoluteSolver.Parser 
     ( parseEquation
     , parseExpression
     ) where
 
-import Prelude hiding (exp, exponent, log, logBase, product, sum)
+import safe Prelude hiding (exp, exponent, log, logBase, product, sum)
 
-import Data.AbsoluteSolver.Structures(Equation(..), AlgebraicStruct(..))
-import Data.Text (pack, split, strip, unpack)
-import Text.Parsec
-import Text.Parsec.Language (haskell)
-import Text.Parsec.Token (GenTokenParser(..)) 
+import safe Data.AbsoluteSolver.Structures(Equation(..), AlgebraicStruct(..))
+import safe Data.Text (pack, split, strip, unpack)
+import safe Text.Parsec
+import safe Text.Parsec.Language (haskell)
+import safe Text.Parsec.Token (GenTokenParser(..)) 
 
 -- | Parser type for reading algebraic structures from plain text
 type AbSolve = Parsec String () AlgebraicStruct
