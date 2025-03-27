@@ -1,6 +1,7 @@
 module Data.AbsoluteSolver 
     ( solvedFor
     , solvedForValue
+    , solvedForValue'
     ) where
 
 import Control.Arrow (left)

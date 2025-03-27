@@ -49,6 +49,11 @@ data AlgebraicStruct
         , log  :: AlgebraicStruct
         }
 
+    | Function 
+        { name :: String
+        , argv :: [AlgebraicStruct]
+        }
+
     -- | Represents a grouped set of algebraic structures contained within parenthesis
     | Group AlgebraicStruct
 
@@ -70,6 +75,8 @@ instance Show AlgebraicStruct where
     show (Exponent b e) = show b ++ "^" ++ show e
 
     show (Logarithm b l) = "log" ++ show b ++ "(" ++ show l ++ ")"
+
+    show (Function n a) = n ++ "(" ++ intercalate "," (map show a) ++ ")"
 
     show (Group g) = "(" ++ show g ++ ")"
 

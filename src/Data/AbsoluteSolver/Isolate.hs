@@ -20,12 +20,14 @@ data SolverError
     = NeedsPolysolve
     | SymbolNotFound
     | IsolationErrorOccurred
+    | FunctionNotUnderstood
     deriving (Eq, Ord)
 
 instance Show SolverError where
     show NeedsPolysolve = "the solution requires polysolving capability that is not yet supported"
     show SymbolNotFound = "the given symbol was not found in the given equation"
     show IsolationErrorOccurred = "an unknown error occurred while trying to isolate the given symbol in the equation"
+    show FunctionNotUnderstood = "encountered a function that could not be algebraically reversed"
 
 -- | A binary operation that reveals whether @sym@ is present as 
 --   a raw symbol in the given @AlgebraicStruct@.
@@ -41,6 +43,8 @@ Quotient s d ~? sym = any (~? sym) [s, d]
 Exponent b e ~? sym = any (~? sym) [b, e]
 
 Logarithm b l ~? sym = any (~? sym) [b, l]
+
+Function _ a ~? sym = any (~? sym) a
 
 Group g ~? sym = g ~? sym
 
@@ -65,6 +69,7 @@ isolateMain = do
         Quotient d s -> isolateQuotient d s
         Exponent b e -> isolateExp b e
         Logarithm b l -> isolateLog b l
+        Function _ _ -> lift $ throwError FunctionNotUnderstood
         Group g -> setLhs g
         Value _ -> lift $ throwError IsolationErrorOccurred
         Symbol s -> if s == sym then 
@@ -130,12 +135,15 @@ isolateLog b l = do
         [True, False] -> do
             setLhs b
             let rhsExp = Group $ Quotient (Value 1.0) l
-            modifyRhs $ flip Exponent rhsExp
+            modifyRhs $ flip Exponent rhsExp . Group
         [False, True] -> do
             setLhs l
             modifyRhs $ Exponent b . Group
         _ -> error "an unknown error has occurred in isolateLogarithm"
     isolateMain
+
+-- isolateFn :: String -> Int -> [AlgebraicStruct] -> Solver ()
+-- isolateFn _name _argc _argv = lift $ throwError FunctionNotUnderstood
 
 modifyRhs :: (AlgebraicStruct -> AlgebraicStruct) -> Solver ()
 modifyRhs f = do

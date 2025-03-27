@@ -72,8 +72,8 @@ logarithm :: AbSolve
 logarithm = do
     whiteSpace haskell
     _ <- string "log"
-    logBase <- p0Term
-    logLog <- parens haskell p0Term <?> "logarithm"
+    logBase <- expression
+    logLog <- parens haskell expression <?> "logarithm"
     return Logarithm 
         { base = logBase
         , log  = logLog
