@@ -11,7 +11,6 @@ cabal-version:      3.0
 --   http://haskell.org/cabal/users-guide/
 --
 name:               AbsoluteSolver
-
 -- The package version.
 -- See the Haskell package versioning policy (PVP) for standards
 -- guiding when and how versions should be incremented.
@@ -20,32 +19,21 @@ name:               AbsoluteSolver
 --                  | | +----- non-breaking API additions
 --                  | | | +--- code changes with no API change
 version:            0.0.0.0
-
 synopsis:           Simple symbolic equation solver
-
 description:        
-
 license:            MIT
-
 license-file:       LICENSE
-
 author:             Grant
-
 category:           Math
 build-type:         Simple
-
 -- Extra doc files to be distributed with the package, such as a CHANGELOG or a README.
 extra-doc-files:    CHANGELOG.md
-
--- Extra source files to be distributed with the package, such as examples, or a tutorial module.
--- extra-source-files:
 
 common warnings
     ghc-options: -Wall --make -no-hs-main -optc-O
 
 library
     import:             warnings 
-
     exposed-modules:    Data.AbsoluteSolver.Parser,
                         Data.AbsoluteSolver.PolySolve,
                         Data.AbsoluteSolver.Evaluate,
@@ -53,36 +41,30 @@ library
                         Data.AbsoluteSolver.Isolate,
                         Data.AbsoluteSolver.Structures,
                         Data.AbsoluteSolver
-
     build-depends:      base    ^>= 4.16.4.0,
                         containers == 0.6.5.1,
                         mtl     == 2.2.2,
                         parsec  == 3.1.18.0,
                         text    == 1.2.5.0,
-
     hs-source-dirs:     src
     default-language:   Haskell2010
 
 executable absolve
     import:             warnings
-
     main-is:            Main.hs
-
     build-depends:      base ^>= 4.16.4.0,
                         AbsoluteSolver
-
     hs-source-dirs:     app
-
     default-language:   Haskell2010
 
-executable libabsolve.so
-    build-depends:  base ^>= 4.16.4.0,
-                    AbsoluteSolver
-    hs-source-dirs: dylib
-    ghc-options:    -optl-shared -optc-DMODULE=AbSolveExt -no-hs-main
-    main-is:        AbSolveExt.hs
-    c-sources:      dylib/mod_init.c
-    include-dirs:   dylib
-    install-includes: AbSolveExt.h
-    cc-options:     -DMODULE=AbSolveExt -shared
-    ld-options:     -shared
+-- executable libabsolve.so
+--     build-depends:  base ^>= 4.16.4.0,
+--                     AbsoluteSolver
+--     hs-source-dirs: dylib
+--     ghc-options:    -optl-shared -optc-DMODULE=AbSolveExt -no-hs-main
+--     main-is:        AbSolveExt.hs
+--     c-sources:      dylib/mod_init.c
+--     include-dirs:   dylib
+--     install-includes: AbSolveExt.h
+--     cc-options:     -DMODULE=AbSolveExt -shared
+--     ld-options:     -shared
