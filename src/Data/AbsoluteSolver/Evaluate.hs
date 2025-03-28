@@ -9,6 +9,7 @@ import safe Control.Monad.Except (runExcept, throwError, Except)
 import safe Control.Monad.Reader (asks, runReaderT, ReaderT)
 import safe Control.Monad.Trans (lift)
 import safe Data.AbsoluteSolver.Structures (AlgebraicStruct(..))
+import safe Data.List (uncons)
 import safe qualified Data.Map as M (lookup, Map)
 
 type Context = M.Map String CtxItem
@@ -21,6 +22,7 @@ data CtxItem
 data EvalError 
     = SymbolNotDefined String
     | InvalidArguments Int Int
+    | ZeroOrSingleTermPolynomial
 
 instance Show EvalError where
     show (SymbolNotDefined symbol) 
@@ -35,6 +37,9 @@ instance Show EvalError where
         ++ show actual
         ++ ")"
 
+    show ZeroOrSingleTermPolynomial
+        = "found a structure representing a polynomial expression that had only one term"
+
 type Evaluate = ReaderT Context (Except EvalError)
 
 evaluate :: AlgebraicStruct -> Context -> Either EvalError Double
@@ -43,7 +48,13 @@ evaluate expr ctx = runExcept $ runReaderT (evaluate' expr) ctx
 evaluate' :: AlgebraicStruct -> Evaluate Double
 evaluate' (Sum terms) = sum <$> mapM evaluate' terms
 
-evaluate' (Difference subtrahends) = foldl (-) 0 <$> mapM evaluate' subtrahends
+evaluate' (Difference subtrahends) =
+    case uncons subtrahends of
+        Nothing -> lift $ throwError ZeroOrSingleTermPolynomial
+        Just (hd, tl) -> do
+            hd' <- evaluate' hd
+            tl' <- mapM evaluate' tl
+            return $ foldl (-) hd' tl'
 
 evaluate' (Product factors) = product <$> mapM evaluate' factors
 

@@ -41,7 +41,7 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Wall
+    ghc-options: -Wall --make -no-hs-main -optc-O
 
 library
     import:             warnings 
@@ -49,6 +49,7 @@ library
     exposed-modules:    Data.AbsoluteSolver.Parser,
                         Data.AbsoluteSolver.PolySolve,
                         Data.AbsoluteSolver.Evaluate,
+                        Data.AbsoluteSolver.Internal,
                         Data.AbsoluteSolver.Isolate,
                         Data.AbsoluteSolver.Structures,
                         Data.AbsoluteSolver
@@ -73,3 +74,15 @@ executable absolve
     hs-source-dirs:     app
 
     default-language:   Haskell2010
+
+executable libabsolve.so
+    build-depends:  base ^>= 4.16.4.0,
+                    AbsoluteSolver
+    hs-source-dirs: dylib
+    ghc-options:    -optl-shared -optc-DMODULE=AbSolveExt -no-hs-main
+    main-is:        AbSolveExt.hs
+    c-sources:      dylib/mod_init.c
+    include-dirs:   dylib
+    install-includes: AbSolveExt.h
+    cc-options:     -DMODULE=AbSolveExt -shared
+    ld-options:     -shared

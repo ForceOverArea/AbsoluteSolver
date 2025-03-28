@@ -21,6 +21,7 @@ data SolverError
     | SymbolNotFound
     | IsolationErrorOccurred
     | FunctionNotUnderstood
+    | ZeroOrSingleTermPolynomial
     deriving (Eq, Ord)
 
 instance Show SolverError where
@@ -28,6 +29,7 @@ instance Show SolverError where
     show SymbolNotFound = "the given symbol was not found in the given equation"
     show IsolationErrorOccurred = "an unknown error occurred while trying to isolate the given symbol in the equation"
     show FunctionNotUnderstood = "encountered a function that could not be algebraically reversed"
+    show ZeroOrSingleTermPolynomial = "encountered a single-term polynomial expression. this error should not be reached unless a manually-built structure was isolated"
 
 -- | A binary operation that reveals whether @sym@ is present as 
 --   a raw symbol in the given @AlgebraicStruct@.
@@ -80,19 +82,25 @@ isolateMain = do
 isolateSum :: [AlgebraicStruct] -> Solver ()
 isolateSum terms = do
     wrapperTerms <- isolatePolynomialTerm terms
-    modifyRhs $ \rhs -> Difference (Group rhs:wrapperTerms)
+    modifyRhs $ \rhs -> Difference [rhs, Group $ Sum wrapperTerms]
     isolateMain
 
 isolateDiff :: [AlgebraicStruct] -> Solver ()
-isolateDiff subtrahends = do
-    wrapperTerms <- isolatePolynomialTerm subtrahends
-    modifyRhs $ Sum . (:wrapperTerms)
+isolateDiff (addend:subtrahends) = do
+    sym <- ask
+    if addend ~? sym then do -- need different behavior depending on where symbol is
+        setLhs addend
+        modifyRhs $ Sum . (:subtrahends)
+    else do
+        wrapperTerms <- isolatePolynomialTerm subtrahends
+        modifyRhs $ Sum . (:addend:wrapperTerms)
     isolateMain
+isolateDiff _ = lift $ throwError ZeroOrSingleTermPolynomial
 
 isolateProd :: [AlgebraicStruct] -> Solver ()
 isolateProd factors = do
     wrapperTerms <- isolatePolynomialTerm factors
-    modifyRhs $ \rhs -> Quotient (Group rhs) (Product wrapperTerms)
+    modifyRhs $ \rhs -> Quotient (Group rhs) (Group $ Product wrapperTerms)
     isolateMain
 
 isolateQuotient :: AlgebraicStruct -> AlgebraicStruct -> Solver ()
@@ -119,10 +127,10 @@ isolateExp b e = do
         [True, False] -> do
             setLhs b
             let rhsExp = Group $ Quotient (Value 1.0) e
-            modifyRhs $ \rhs -> Exponent rhs rhsExp
+            modifyRhs $ \rhs -> Exponent (Group rhs) (Group rhsExp)
         [False, True] -> do
             setLhs e
-            modifyRhs $ \rhs -> Logarithm b rhs
+            modifyRhs $ \rhs -> Logarithm (Group b) (Group rhs)
         _ -> error "an unknown error occurred in isolateExponent"
     isolateMain
 
@@ -134,8 +142,8 @@ isolateLog b l = do
         [True, True] -> lift $ throwError NeedsPolysolve
         [True, False] -> do
             setLhs b
-            let rhsExp = Group $ Quotient (Value 1.0) l
-            modifyRhs $ flip Exponent rhsExp . Group
+            let rhsExp = Group l
+            modifyRhs $ Exponent rhsExp . Group . Quotient (Value 1.0)
         [False, True] -> do
             setLhs l
             modifyRhs $ Exponent b . Group
