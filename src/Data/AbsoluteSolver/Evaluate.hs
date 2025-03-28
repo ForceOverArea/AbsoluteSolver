@@ -81,7 +81,6 @@ evaluate' (Function n a) = do
     else 
         lift . throwError $ InvalidArguments argc (length a)
     
-
 evaluate' (Group g) = evaluate' g
 
 evaluate' (Value v) = return v

@@ -1,5 +1,10 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
+import Data.AbsoluteSolver (solvedFor, solvedForValue')
+import Foreign.C (newCString)
+import Foreign.C.Types (CDouble)
+import Foreign.C.String (peekCString, CString)
+
 solvedForHs :: CString -> CString -> IO CString
 solvedForHs eqn target = do
     eqn' <- peekCString eqn
@@ -22,3 +27,7 @@ solvedForValueHs eqn target ctx = do
     where 
         nan :: Double
         nan = 0.0 / 0.0
+
+foreign export ccall solvedForHs :: CString -> CString -> IO CString
+
+foreign export ccall solvedForValueHs :: CString -> CString -> CString -> IO CDouble

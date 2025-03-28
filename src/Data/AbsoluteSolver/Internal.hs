@@ -1,14 +1,10 @@
 {-# LANGUAGE Safe #-}
-{-# LANGUAGE ForeignFunctionInterface #-}
 
-module Data.AbsoluteSolver.Internal where
+module Data.AbsoluteSolver.Internal 
+    ( parseContextString
+    ) where
 
-import safe Control.Arrow ((&&&), (|||), second)
-import safe Data.AbsoluteSolver (solvedFor, solvedForValue')
-import safe Data.AbsoluteSolver.Structures (Equation)
-import safe Foreign.C.String (peekCString, CString)
-import safe Foreign.C.Types (CDouble(..))
-import safe Foreign.C (newCString)
+import safe Control.Arrow ((&&&), second)
 
 parseContextString :: String -> [(String, Double)]
 parseContextString ctx = map parseItem items
@@ -27,7 +23,3 @@ splitStrAt p s = case dropWhile (== p) s of
     "" -> []
     s' -> w : splitStrAt p s''
         where (w, s'') = break (== p) s'
-
-foreign export ccall solvedForHs :: CString -> CString -> IO CString
-
-foreign export ccall solvedForValueHs :: CString -> CString -> CString -> IO CDouble
