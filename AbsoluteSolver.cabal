@@ -30,7 +30,7 @@ build-type:         Simple
 extra-doc-files:    CHANGELOG.md
 
 common warnings
-    ghc-options: -Wall --make -no-hs-main -optc-O
+    ghc-options: -Wall 
 
 library
     import:             warnings 
@@ -49,6 +49,28 @@ library
     hs-source-dirs:     src
     default-language:   Haskell2010
 
+foreign-library libabsolve
+    type:               native-shared
+    lib-version-info:   0:0:0
+    other-modules:      AbsoluteSolverC,
+                        Data.AbsoluteSolver.Parser,
+                        Data.AbsoluteSolver.PolySolve,
+                        Data.AbsoluteSolver.Evaluate,
+                        Data.AbsoluteSolver.Internal,
+                        Data.AbsoluteSolver.Isolate,
+                        Data.AbsoluteSolver.Structures,
+                        Data.AbsoluteSolver
+    build-depends:      base    ^>= 4.16.4.0,
+                        containers == 0.6.5.1,
+                        mtl     == 2.2.2,
+                        parsec  == 3.1.18.0,
+                        text    == 1.2.5.0,
+                        AbsoluteSolver
+    hs-source-dirs:     src, 
+                        ffi-src
+    c-sources:          csrc/AbsoluteSolverInit.c
+    default-language:   Haskell2010
+
 executable absolve
     import:             warnings
     main-is:            Main.hs
@@ -56,15 +78,3 @@ executable absolve
                         AbsoluteSolver
     hs-source-dirs:     app
     default-language:   Haskell2010
-
--- executable libabsolve.so
---     build-depends:  base ^>= 4.16.4.0,
---                     AbsoluteSolver
---     hs-source-dirs: dylib
---     ghc-options:    -optl-shared -optc-DMODULE=AbSolveExt -no-hs-main
---     main-is:        AbSolveExt.hs
---     c-sources:      dylib/mod_init.c
---     include-dirs:   dylib
---     install-includes: AbSolveExt.h
---     cc-options:     -DMODULE=AbSolveExt -shared
---     ld-options:     -shared

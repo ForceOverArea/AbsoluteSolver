@@ -1,8 +1,13 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
+module AbsoluteSolverC () where
+
+import Control.Arrow ((|||))
 import Data.AbsoluteSolver (solvedFor, solvedForValue')
+import Data.AbsoluteSolver.Internal (parseContextString)
+import Data.AbsoluteSolver.Structures (Equation)
 import Foreign.C (newCString)
-import Foreign.C.Types (CDouble)
+import Foreign.C.Types (CDouble(..))
 import Foreign.C.String (peekCString, CString)
 
 solvedForHs :: CString -> CString -> IO CString
