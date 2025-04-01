@@ -6,19 +6,16 @@ import Control.Arrow ((|||))
 import Data.AbsoluteSolver (solvedFor, solvedForValue')
 import Data.AbsoluteSolver.Internal (parseContextString)
 import Data.AbsoluteSolver.Structures (Equation)
-import Foreign.C (newCString)
-import Foreign.C.Types (CDouble(..))
-import Foreign.C.String (peekCString, CString)
+import Foreign (free, nullPtr, Ptr)
+import Foreign.C (newCString, peekCString, CString, CDouble(..))
 
 solvedForHs :: CString -> CString -> IO CString
 solvedForHs eqn target = do
     eqn' <- peekCString eqn
     target' <- peekCString target
-    let result = eqn' `solvedFor` target'
-    newCString $ coerceResult result
-    where 
-        coerceResult :: Either String (Equation, b) -> String
-        coerceResult = id ||| show . fst
+    case eqn' `solvedFor` target' of
+        Left _ -> return nullPtr
+        Right (soln, _steps) -> newCString $ show soln
 
 solvedForValueHs :: CString -> CString -> CString -> IO CDouble
 solvedForValueHs eqn target ctx = do
@@ -33,6 +30,6 @@ solvedForValueHs eqn target ctx = do
         nan :: Double
         nan = 0.0 / 0.0
 
+foreign export ccall free :: Ptr a -> IO ()
 foreign export ccall solvedForHs :: CString -> CString -> IO CString
-
 foreign export ccall solvedForValueHs :: CString -> CString -> CString -> IO CDouble
