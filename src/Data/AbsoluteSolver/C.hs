@@ -30,6 +30,6 @@ solvedForValueHs eqn target ctx = do
         nan :: Double
         nan = 0.0 / 0.0
 
-foreign export ccall free :: Ptr a -> IO ()
+foreign export ccall free :: (Ptr a) -> IO ()
 foreign export ccall solvedForHs :: CString -> CString -> IO CString
 foreign export ccall solvedForValueHs :: CString -> CString -> CString -> IO CDouble
