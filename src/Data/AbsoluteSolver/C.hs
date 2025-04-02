@@ -1,6 +1,6 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module AbsoluteSolverC () where
+module Data.AbsoluteSolver.C () where
 
 import Control.Arrow ((|||))
 import Data.AbsoluteSolver (solvedFor, solvedForValue')

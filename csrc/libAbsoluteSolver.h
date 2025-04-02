@@ -1,7 +1,8 @@
 #ifndef LIBABSOLUTESOLVER_H_
 #define LIBABSOLUTESOLVER_H_
 #include <stdlib.h>
-#include "HsFFI.h"
+
+typedef unsigned char HsBool;
 
 // Module initialization functions
 
@@ -11,14 +12,14 @@
  *
  * \returns a boolean value indicating if the RTS was initialized properly.
  */
-HsBool absoluteSolverInit(void);
+extern HsBool absoluteSolverInit(void);
 
 /**
  * \brief Cleans up the Haskell RTS for functions in the AbsoluteSolver library.
  *        This *should* be called ONCE after the AbsoluteSolver library is done 
  *        being used. 
  */
-void absoluteSolverExit(void);
+extern void absoluteSolverExit(void);
 
 // Actual Haskell module FFI exports
 
@@ -31,7 +32,7 @@ void absoluteSolverExit(void);
  * \param[in] targetVar the variable to solve for in `eqn`
  * \returns the equation symbolically solved for `targetVar` or an error message.
  */
-char *solvedForHs(char *eqn, char *targetVar);
+extern char *solvedForHs(const char *eqn, const char *targetVar);
 
 /**
  * \brief Symbolically solves for the given variable `targetVar` in the
@@ -47,6 +48,6 @@ char *solvedForHs(char *eqn, char *targetVar);
  *            in `eqn`. Format is "var1=10,var2=9.0,..."
  * \returns the value of `targetVar` or NaN if an error occurred.
  */
-double solvedForValueHs(char *eqn, char *targetVar, char *constVals);
+extern double solvedForValueHs(const char *eqn, const char *targetVar, const char *constVals);
 
 #endif // LIBABSOLUTESOLVER_H_
