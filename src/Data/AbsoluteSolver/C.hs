@@ -1,13 +1,15 @@
+{-# LANGUAGE Safe #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
-
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant bracket" #-}
 module Data.AbsoluteSolver.C () where
 
-import Control.Arrow ((|||))
-import Data.AbsoluteSolver (solvedFor, solvedForValue')
-import Data.AbsoluteSolver.Internal (parseContextString)
-import Data.AbsoluteSolver.Structures (Equation)
-import Foreign (free, nullPtr, Ptr)
-import Foreign.C (newCString, peekCString, CString, CDouble(..))
+import safe Control.Arrow ((|||))
+import safe Data.AbsoluteSolver (solvedFor, solvedForValue')
+import safe Data.AbsoluteSolver.Internal (parseContextString)
+import safe Data.AbsoluteSolver.Structures (Equation)
+import safe Foreign (free, nullPtr, Ptr)
+import safe Foreign.C (newCString, peekCString, CString, CDouble(..))
 
 solvedForHs :: CString -> CString -> IO CString
 solvedForHs eqn target = do

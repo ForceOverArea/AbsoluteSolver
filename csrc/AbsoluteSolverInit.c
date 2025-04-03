@@ -18,11 +18,11 @@ HsBool absoluteSolverInit(void)
     static int argc         = 1;
     static char *argv_[]    = { "mod_init.so", 0 };
     static char **argv      = argv_;
-    (void)hs_init(&argc, &argv);
+    hs_init(&argc, &argv);
 #ifdef USER_SPECIFIED_INIT
     if (HS_BOOL_TRUE != USER_SPECIFIED_INIT()) 
     {
-        hs_exit();
+        hs_exit(); // clean up runtime on failure to start
     }
 #else
     return HS_BOOL_TRUE;
