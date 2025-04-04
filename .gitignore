@@ -3,4 +3,4 @@
 Haskell/*
 
 # ...minus these
-!**/C.hs
+!**/*.hs
