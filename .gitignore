@@ -1,6 +1,6 @@
 # Ignore these...
 **/dist-newstyle
-Haskell
+Haskell/*
 
 # ...minus these
-!Haskell/C.hs
+!**/C.hs
